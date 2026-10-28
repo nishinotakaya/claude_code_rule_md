@@ -24,6 +24,15 @@
 社長（ユーザー）→ CTO（メインセッション: 計画・検収・マージ）→ PM（サブ）→ 作業員（`.claude/agents/` の designer / implementer / tester / reviewer / qa / researcher）。
 コードを書くのは implementer だけ。どのステップで誰を呼ぶかは `/develop` が決める。
 
-## このリポジトリ
+## このリポジトリ（tech-put-app / フロント）
 
-共通ブランチ（`feat/techput-common`）。配備先ごとの事実は `feat/techput-frontend` / `feat/techput-backend` の `CLAUDE.md` と `.claude/rules/project/` にある。
+| 項目 | 値 |
+|---|---|
+| 技術 | React 18 / Vite 4 / TypeScript 4.9 / react-router-dom 7 / axios / Bootstrap 5 + 自作 CSS（Tailwind は入っているが無効） |
+| 起動 | `npm install` → `npm run dev`（http://localhost:5173） |
+| 検証 | `npm run build`（`tsc && vite build`）。lint・テストランナーは無い。画面は Playwright で確認 |
+| API | `VITE_API_URL`（`.env.development.local`）。バックエンド `../teac-output-new` を `docker compose up -d` |
+| 統合先 | `origin/main`（origin `1107t/tech-put-app`）。作業ブランチは `feature/<内容>` / `fix/<内容>` |
+| 相手側 | バックエンド API の契約・テナント契約は `.claude/rules/project/techput-overview.md`。先にバックエンド PR |
+
+詳細は `.claude/rules/project/frontend.md`。`src/` を触ると React / CSS / セキュリティの規則が追加で読み込まれる。
