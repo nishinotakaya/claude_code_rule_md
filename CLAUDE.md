@@ -24,6 +24,15 @@
 社長（ユーザー）→ CTO（メインセッション: 計画・検収・マージ）→ PM（サブ）→ 作業員（`.claude/agents/` の designer / implementer / tester / reviewer / qa / researcher）。
 コードを書くのは implementer だけ。どのステップで誰を呼ぶかは `/develop` が決める。
 
-## このリポジトリ
+## このリポジトリ（teac-output-new / バックエンド）
 
-共通ブランチ（`feat/techput-common`）。配備先ごとの事実は `feat/techput-frontend` / `feat/techput-backend` の `CLAUDE.md` と `.claude/rules/project/` にある。
+| 項目 | 値 |
+|---|---|
+| 技術 | Rails 6.1 / Ruby 3.0.3 / MySQL 8 / RSpec / JWT（`api/v1`）+ Devise（旧 ERB 画面）。README の Rails 7 / Ruby 3.3 は古い |
+| 起動 | `docker compose up -d`。ホスト側ポートは `docker-compose.yml` の `ports` を正とする（2026-10 時点 3013） |
+| 検証 | `bundle exec rspec` / `bundle exec rubocop` / `bundle exec brakeman -q`。CI は無いので自分で回す |
+| 統合先 | `origin/develop`（origin `nishinotakay/teac-output-new`）。e-learning は `feature/React` 系。作業ブランチは `feat/<内容>` / `fix/<内容>` |
+| 多テナント | `Current.tenant` をログイン主体から決め、モデルは `default_scope { in_current_tenant }`。マイグレーション・seed では nil |
+| 相手側 | フロント `../tech-put-app` の型と `*_json` を一致させる。先にバックエンド PR（旧フロントのままでも動く変更に限る） |
+
+詳細は `.claude/rules/project/backend.md`。`app/` `spec/` `db/migrate/` を触ると Rails / RSpec / マイグレーション / 認可の規則が追加で読み込まれる。
