@@ -8,11 +8,11 @@
 
 | アクション | HTTP | 認証 | ロール | 所有 / テナントスコープ | 副作用 |
 |---|---|---|---|---|---|
-| `index` | GET | `authenticate_admin!` | admin | `Course.all`（default_scope でテナント） | 無 |
-| `create` | POST | 同上 | admin | `Course.new`（`set_tenant_from_owner`） | 作成 |
-| `complete` | POST | `authenticate_user!` | user | `current_user.learnings.find` | 更新 |
+| `index` | GET | `authenticate_admin!` | admin | `Item.all`（例: default_scope でテナント） | 無 |
+| `create` | POST | 同上 | admin | `Item.new`（作成時に所有者のテナントを入れる） | 作成 |
+| `complete` | POST | `authenticate_user!` | user | `current_user.records.find` | 更新 |
 
-- **ロール列が「全ロール」のアクションは、なぜ全ロールでよいかを 1 行で書けること。** manager（テナント管理）が admin（講師）の画面に自動で入れるべきではない
+- **ロール列が「全ロール」のアクションは、なぜ全ロールでよいかを 1 行で書けること。** 上位管理者が管理者の画面に自動で入れるべきではない
 - **副作用列が空でないアクションは GET にしない。** GET は CSRF 検証が効かず、img タグやプリフェッチで発火する
 - 埋められない列があれば、それが指摘
 
@@ -20,7 +20,7 @@
 
 | 範囲 | 置き場所 |
 |---|---|
-| namespace 全体 | その namespace の BaseController に `before_action :authenticate_<role>!`（`Api::V1::Admin::*` は admin、`Manager::*` は manager） |
+| namespace 全体 | その namespace の BaseController に `before_action :authenticate_<role>!`（例: `Api::V1::Admin::*` は管理者、`Manager::*` は上位管理者） |
 | 1 コントローラ | 先頭の `before_action`。`only:` で抜け穴を作らない |
 | 弾き方 | `render_unauthorized`（401）/ 403 `{ error: '権限がありません' }` / 他テナントは 404。**500 にしない** |
 
@@ -30,9 +30,9 @@
 
 | ❌ テーブル起点 | ✅ 認証主体 / テナント起点 |
 |---|---|
-| `Learning.where(user_id: params[:user_id])` | `current_user.learnings` |
+| `Record.where(user_id: params[:user_id])` | `current_user.records` |
 | `Article.unscoped.find(params[:id])` | `Article.find(params[:id])`（default_scope が効く） |
-| `Course.where(id: ids).update_all(...)` | `Course.where(id: ids)` は default_scope 内。ただし紐付け / 解除の両方向を同じスコープで |
+| `Item.where(id: ids).update_all(...)` | `Item.where(id: ids)` は default_scope 内。ただし紐付け / 解除の両方向を同じスコープで |
 | `Tenant.find(params[:tenant_id])` を admin が受ける | `current_admin.tenant` |
 
 `update_all` を書くときは「付ける側」と「外す側」の両方を列挙し、スコープが対称か見る。
@@ -46,14 +46,14 @@
 新しい管理機能ではこの名前のテストが揃うまで完了にしない。
 
 - 未ログイン（Bearer なし / 期限切れ）では 401
-- ロール違いのトークン（user トークンで admin API、admin トークンで manager API）は 401 / 403
+- ロール違いのトークン（一般ユーザーのトークンで管理者 API、管理者のトークンで上位管理者 API）は 401 / 403
 - 自テナントは一覧を表示できる / **一覧に他テナントのレコードが出ない**
 - 他テナントのレコードは取得・編集できない（404 かつ **DB 不変**）
 - 副作用アクションは GET では叩けない
 - 紐付け解除で他テナントの紐付けは残る
 - `*_attributes` の `id` を差し替えても関連先がすげ替わらない
 - 削除ルートを撤去したなら「削除ルートは無い」をテストで固定する
-- 受講生: 他人の学習記録は完了にできない（`user_id` パラメータを送っても本人の記録だけが変わる）
+- 一般ユーザー: 他人の記録は更新できない（`user_id` パラメータを送っても本人の記録だけが変わる）
 
 ## 6. フォーム ⇔ permit ⇔ サーバー検証 ⇔ 保存 の同値性
 

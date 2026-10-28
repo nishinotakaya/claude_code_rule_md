@@ -1,4 +1,4 @@
-# テックプット 開発ルール
+# 開発ルール
 
 > 正本の関係: このファイル = 絶対ルールと入口。細則は `.claude/rules/`（自動読込）、長い手順は `.claude/skills/`（`/develop` 等で呼ぶ）。
 > ここに書いた事実と実コードが食い違ったら **実コードを正** とし、このファイルを直す。
@@ -24,18 +24,7 @@
 社長（ユーザー）→ CTO（メインセッション: 計画・検収・マージ）→ PM（サブ）→ 作業員（`.claude/agents/` の designer / implementer / tester / reviewer / qa / researcher）。
 コードを書くのは implementer だけ。どのステップで誰を呼ぶかは `/develop` が決める。
 
-## このリポジトリ（テックプット: フロント + バックエンド共通）
+## このリポジトリ
 
-`tech-put-app`（フロント）と `teac-output-new`（バックエンド）の両方に同じ一式を配備する。どちらで動いているかはカレントのファイル構成で判断する（`package.json` + `src/` ならフロント、`Gemfile` + `app/` ならバックエンド）。
-
-| 項目 | フロント `tech-put-app` | バックエンド `teac-output-new` |
-|---|---|---|
-| 技術 | React 18 / Vite 4 / TypeScript 4.9 / react-router-dom 7 / axios / Bootstrap 5 + 自作 CSS（Tailwind は無効） | Rails 6.1 / Ruby 3.0.3 / MySQL 8 / RSpec / JWT（`api/v1`）+ Devise（旧 ERB 画面）。README の Rails 7 表記は古い |
-| 起動 | `npm install` → `npm run dev`（http://localhost:5173） | `docker compose up -d`。ホスト側ポートは `docker-compose.yml` の `ports` を正とする（2026-10 時点 3013） |
-| 検証 | `npm run build`（`tsc && vite build`）。lint・テストランナーは無い。画面は Playwright | `bundle exec rspec` / `rubocop` / `brakeman -q`。CI は無いので自分で回す |
-| 統合先 | `origin/main`（`1107t/tech-put-app`）。作業ブランチ `feature/` `fix/` | `origin/develop`（`nishinotakay/teac-output-new`）。e-learning は `feature/React` 系。作業ブランチ `feat/` `fix/` |
-| 相手側 | API 向き先は `VITE_API_URL`。型は `*_json` と一致させる | `Current.tenant` をログイン主体から決め、モデルは `default_scope { in_current_tenant }`。マイグレーション・seed では nil |
-
-- 両方に跨る変更は **バックエンド PR → フロント PR** の順。バックエンド PR は旧フロントのままでも動く変更に限る（フィールドは足すだけ。改名・削除しない）
-- 共通の事実（ロール・URL・API 契約・テナント契約・テストアカウント）は `.claude/rules/project/techput-overview.md`。各リポジトリの詳細は `frontend.md` / `backend.md`
-- `src/` を触ると React / CSS / フロントのセキュリティ規則、`app/` `spec/` `db/migrate/` を触ると Rails / RSpec / マイグレーション / 認可の規則が追加で読み込まれる
+プロジェクト固有の事実（構成・起動・検証コマンド・統合先・API 契約・テストアカウント）は `.claude/rules/project/overview.md` に書く。配備したら最初に埋める。
+`paths:` 付きの技術別ルール（React / CSS / Rails / RSpec / マイグレーション / 認可など）は、該当するファイルを触ったときだけ追加で読み込まれる。

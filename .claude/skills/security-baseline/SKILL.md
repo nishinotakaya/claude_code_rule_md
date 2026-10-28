@@ -34,7 +34,7 @@ git ls-files | grep -E 'master\.key$|credentials/.*\.key$|secrets\.yml$|\.pem$|c
 
 ### 1.2 `find(params[:id])` の直後に所有者 / テナントスコープがあるか
 
-認証主体の relation 起点（`current_user.learnings.find`）か、`Current.tenant` の default_scope が効くモデルか、直後の明示チェックか。無いなら「なぜ無くてよいか（全テナント共通マスタ等）」をコメントで残す。無言の未スコープ find は、意図か漏れかを後から誰も判定できない。
+認証主体の relation 起点（例: `current_user.articles.find`）か、テナントの default_scope が効くモデルか、直後の明示チェックか。無いなら「なぜ無くてよいか（全テナント共通マスタ等）」をコメントで残す。無言の未スコープ find は、意図か漏れかを後から誰も判定できない。
 
 ### 1.3 新規エンドポイントの認証境界
 
@@ -57,11 +57,11 @@ JS を飛ばした POST が前提。params に無いキーは更新しない（`
 
 ### 1.7 多テナント固有
 
-- `Current.tenant` はログイン主体から決める。URL・パラメータ・ヘッダの `tenant_id` を信用しない
+- 多テナントの場合: テナントはログイン主体から決める（例: `Current.tenant` のような CurrentAttributes）。URL・パラメータ・ヘッダの `tenant_id` を信用しない
 - `unscoped` を書いたら理由をコメントで残し、直後に明示の `where(tenant_id:)` を付ける
-- マイグレーション・seed・rake・コンソールでは `Current.tenant` が nil。データ移行はテナントを明示して回す
+- マイグレーション・seed・rake・コンソールではテナントスコープが効かない。データ移行はテナントを明示して回す
 - 別レコードの紐付け（記事にコース・記事にカテゴリー）は相手が同じテナントかをモデルで検証する
-- 受講生 API は「誰の記録か」を JWT の本人から決める。リクエストの `user_id` は使わない
+- 一般ユーザー API は「誰の記録か」を認証主体から決める。リクエストの `user_id` は使わない
 
 ## 2. レビュー時 — 兄弟アクションの同値性
 

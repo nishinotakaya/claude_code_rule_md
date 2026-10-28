@@ -1,6 +1,6 @@
 ---
 name: auto-test
-description: Playwright E2E 動作確認の実行ルール（テックプット向け）。「自動テスト」「動作確認して」「Playwright で確認して」「スクショ付きでテスト」「E2E レポート作って」で参照。
+description: Playwright E2E 動作確認の実行ルール。「自動テスト」「動作確認して」「Playwright で確認して」「スクショ付きでテスト」「E2E レポート作って」で参照。
 user-invocable: true
 ---
 
@@ -12,31 +12,27 @@ user-invocable: true
 
 | 項目 | 値 |
 |---|---|
-| フロント | `cd tech-put-app && npm run dev` → `http://localhost:5173` |
-| バックエンド | `cd teac-output-new && docker compose up -d`。ホスト側ポートは `docker-compose.yml` の `ports`（2026-10 時点 `127.0.0.1:3013`） |
-| API 向き先 | `tech-put-app/.env.development.local` の `VITE_API_URL`（例 `http://localhost:3013/api/v1`）。無ければ `src/lib/api.ts` の既定値 `http://localhost:3000/api/v1` が使われてズレる。ユーザーに直してもらう |
-| 受講生ログイン | `/tenant/<tenantId>/users/login`。`test_user0@gmail.com`〜`test_user29@gmail.com` / `password` |
-| 管理者ログイン | `/admin/login`。`test_admin@gmail.com` / `password` |
-| マネージャーログイン | `/manager/login`。アカウントは `db/seeds.rb` を確認 |
-| DB | Adminer `http://localhost:8080`（サーバ `db` / `root` / `password` / `development_db`） |
+| 起動 URL（フロント・バックエンド） | `.claude/rules/project/overview.md` の構成表 |
+| API 向き先 | フロントの環境変数ファイル。ずれていたらユーザーに直してもらう |
+| ログイン URL・テストアカウント | `overview.md` のロールと URL、seed ファイルの場所 |
 | ツール | `mcp__playwright__*`（既定）。ログイン済みセッションが要る外部サイトだけ Chrome 拡張 |
 
-seed アカウントはローカル開発 DB 専用。tenantId は Adminer か `rails runner 'puts Tenant.first.id'` で取る。
+seed アカウントはローカル開発 DB 専用。
 
 ## 実行フロー
 
 ### 1. 対象の確認
-- テスト対象の機能・画面、ロール（受講生 / 管理者 / マネージャー）、項目（CRUD / 権限 / 表示 / フロー）
-- 受け入れ基準が文書（`docs/e-learning/phases.md` 等）にあればそれを項目にする
+- テスト対象の機能・画面、ロール（`overview.md` のロール一覧）、項目（CRUD / 権限 / 表示 / フロー）
+- 受け入れ基準が文書（仕様書・Issue 等）にあればそれを項目にする
 
 ### 2. 事前確認
 
 ```bash
-curl -s -o /dev/null -w "%{http_code}\n" http://localhost:5173/
-curl -s -o /dev/null -w "%{http_code}\n" http://localhost:3013/api/v1/auth/login   # 405 や 404 でも応答すれば OK
+curl -s -o /dev/null -w "%{http_code}\n" <フロントの起動 URL>
+curl -s -o /dev/null -w "%{http_code}\n" <API のログイン URL>   # 405 や 404 でも応答すれば OK
 ```
 
-テストデータが要るなら `rails runner` か Adminer で事前投入する。本番データは書き換えない。
+テストデータが要るなら `rails runner` か DB 管理ツール で事前投入する。本番データは書き換えない。
 
 ### 3. 操作
 - PC 幅 1440×900 とスマホ幅 375×812 の両方
@@ -49,7 +45,7 @@ curl -s -o /dev/null -w "%{http_code}\n" http://localhost:3013/api/v1/auth/login
 
 ```
 docs/test_evidence/<機能名>/
-  ├── <テストID>_<内容>.png     ← 例: U1_lesson_list_pc.png / U1_lesson_list_sp.png
+  ├── <テストID>_<内容>.png     ← 例: U1_item_list_pc.png / U1_item_list_sp.png
   ├── results.json
   └── TEST_REPORT.md
 ```
@@ -62,7 +58,7 @@ docs/test_evidence/<機能名>/
 # <機能名> テストレポート
 
 **実施日**: YYYY-MM-DD / **ブランチ**: front <branch> / back <branch>
-**環境**: localhost:5173 → localhost:3013 / **ツール**: Playwright (Chromium)
+**環境**: <フロントの URL> → <API の URL>（`overview.md`） / **ツール**: Playwright (Chromium)
 
 ## サマリー
 | 結果 | 件数 |

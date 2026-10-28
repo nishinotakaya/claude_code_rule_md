@@ -1,22 +1,22 @@
-# React / TypeScript の観点（tech-put-app）
+# React / TypeScript の観点
 
-> このプロジェクトには ESLint が無い。他所では機械が潰す `any` / 空 catch / `useEffect` 依存配列 / インライン style も **人が見る**。
+> ESLint が無いプロジェクトでは、他所では機械が潰す `any` / 空 catch / `useEffect` 依存配列 / インライン style も **人が見る**。
 
 ## 3.1 型と契約
 - `any` / 不要な `as` が増えていないか
-- `src/lib/*Api.ts` の interface がバックエンドの `*_json` と一致しているか（キー名・camelCase・`id: string`）。片方だけ変わっていたら P1
+- API クライアントの interface がバックエンドのレスポンス整形と一致しているか（キー名・ID の型・日時形式。`overview.md` の API 契約）。片方だけ変わっていたら P1
 - 難読型に名前が付いているか
 
 ## 3.2 副作用の場所
 - `useEffect` の依存配列に漏れがないか。クリーンアップがあるか
 - `useLayoutEffect` は描画前の同期 DOM 測定だけか
-- fetch をコンポーネントから直接呼んでいないか（`*Api.ts` 経由か）
+- fetch をコンポーネントから直接呼んでいないか（API クライアント層経由か）
 
 ## 3.3 ルーティング・認可
 - 「閲覧」と「編集」が同じパスに飛んでいないか。固定パスと動的パスの順序
-- 新しいページに `useRequireAuth` / `useRequireAdmin` / `useRequireManager` があるか
-- 管理者 API のパスが `/admin/` から、マネージャー API が `/manager/` から始まっているか（トークン切替の条件）
-- 受講生の操作で `user_id` / `tenant_id` を送っていないか
+- 新しいページに既存の認可ガードがあるか
+- ロール別 API のパス接頭辞がトークン切替の条件と合っているか（`overview.md`）
+- 一般ユーザーの操作で `user_id` / `tenant_id` を送っていないか
 
 ## 3.4 状態の境界
 - ロード中 / 空 / エラー / 成功の 4 状態。空フォームのちらつき
@@ -29,7 +29,7 @@
 - 並び順を id 依存にしていないか
 
 ## 3.6 CSS / レイアウト
-- Tailwind クラスを書いていないか（効かない）
+- 採用していない CSS フレームワークのクラスを書いていないか（効かない）
 - `style={{}}`・`!important`・`overflow: hidden` で隠す応急処置がないか（`/layout-defense` §2）
 - 320 / 375 幅で横溢れしないか（`scrollWidth` の数値が報告にあるか）
 

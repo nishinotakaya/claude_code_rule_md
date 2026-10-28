@@ -9,7 +9,7 @@
 
 ## 手順
 1. /code-review を読み、references/machine-checked.md で「機械が潰す観点」を頭から外す
-   （このプロジェクトは lint も CI も無いので、`any`・空 catch・1 文字変数・N+1 も人が見る）
+   （lint / CI が無い観点は、`any`・空 catch・1 文字変数・N+1 も人が見る）
 2. 変更差分を確認する: git -C <worktree> diff <base>...HEAD
 3. 差分の各変更について .claude/rules/coding/ の禁止パターンに違反していないか 1 項目ずつ確認する
 4. コントローラ / routes を触る差分は /security-baseline の到達可能性表を埋める

@@ -6,7 +6,7 @@ paths:
   - "config/initializers/cors.rb"
 ---
 
-# 認可とテナント境界（teac-output-new）
+# 認可とテナント境界
 
 > 「ナビに出していない」「フロントでボタンを隠した」は認可ではない。URL を直接叩けば届く。手順の詳細は `/security-baseline`。
 
@@ -22,23 +22,23 @@ paths:
 
 ## 必ず守る 7 行
 
-1. `Current.tenant` はログイン主体（`@current_user&.tenant || @current_admin&.tenant`）から決める。URL・パラメータ・ヘッダの `tenant_id` を信用しない
+1. 多テナントの場合: テナントはログイン主体から決める（例: 認証時に `Current.tenant` へセット）。URL・パラメータ・ヘッダの `tenant_id` を信用しない
 2. `unscoped` を書くなら理由をコメントに残し、直後に明示の `where(tenant_id:)` を付ける
-3. 受講生の更新系は `current_user.xxx.find`。`params[:user_id]` で本人を決めない
-4. 別レコードの紐付け（記事にコース・記事にカテゴリー）は、相手が同じテナントかをモデルで検証する
+3. 一般ユーザーの更新系は `current_user.xxx.find`。`params[:user_id]` で本人を決めない
+4. 別レコードの紐付けは、相手が同じテナントかをモデルで検証する
 5. 紐付け / 解除の `update_all` は両方向を同じスコープで対称に書く
-6. manager（テナント管理）と admin（講師）の namespace を混ぜない。上位ロールを自動で通さない
+6. 上位管理者と管理者の namespace を混ぜない。上位ロールを自動で通さない
 7. 認証は既定で全部にかけ、外すものだけ `skip_before_action` で明示する（`auth/login` だけ）。パス前方一致の条件付き `before_action` を書かない
 
-## JWT
+## JWT（使っている場合）
 
-- 署名鍵は `ENV['SECRET_KEY_BASE']`。リテラルを置かない
+- 署名鍵は ENV か credentials から読む。リテラルを置かない
 - `authenticate_admin!` 等は `role` と対象テーブルの両方で判定する。`id` が一致しても `role` が違えば弾く
 - 有効期限を延ばす・リフレッシュを足す変更は、失効手段（パスワード変更・削除後に旧トークンを無効にする）とセットで
 
 ## CORS
 
-`config/initializers/cors.rb` は production で `ENV['FRONTEND_ORIGIN']` の完全一致・`credentials: false`。`*` と部分一致正規表現を足さない。`credentials: true` にするなら Cookie 認証への移行と CSRF 対策をセットで。
+`config/initializers/cors.rb` は production で ENV から読んだ許可オリジンの完全一致・`credentials: false`。`*` と部分一致正規表現を足さない。`credentials: true` にするなら Cookie 認証への移行と CSRF 対策をセットで。
 
 ## テスト（request spec）
 

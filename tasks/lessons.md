@@ -4,14 +4,14 @@
 
 ## 環境・設定の取り違え
 
-- フロントの `CLAUDE.md` に書かれたバックエンドのポート（3001）と `teac-output-new/docker-compose.yml` のポート（3013）が食い違っていた → ドキュメントのポート・URL は古い前提で疑い、`docker-compose.yml` と `.env.development.local` の現物で確認する
-- `teac-output-new/README.md` の技術スタック（Rails 7 / Ruby 3.3）は Gemfile（Rails 6.1 / Ruby 3.0.3）と違う → バージョンは Gemfile / `.ruby-version` / `package.json` を正とする
-- フロントには Tailwind が `package.json` と postcss に入っているが `@tailwind` ディレクティブが無く、ユーティリティは生成されない → Tailwind クラスを書かない。Bootstrap 5 + 自作 CSS で組む
+- ドキュメントのポートと docker-compose の実値が食い違っていた → ドキュメントのポート・URL は古い前提で疑い、`docker-compose.yml` と `.env` 系の現物で確認する
+- README の技術スタックのバージョンが Gemfile / `.ruby-version` / `package.json` と違っていた → バージョンは設定ファイルを正とする
+- CSS フレームワークが依存に入っていてもディレクティブが無く、ユーティリティが生成されないことがある → クラスを書く前に生成されるか確認し、プロジェクトの CSS 方針（`overview.md`）に従う
 
 ## テスト・検証
 
-- フロントにテストランナーが無い → 「テストを書いて」は `npm run build`（tsc）と Playwright の操作手順に置き換える。受け入れ基準を画面で確かめる
-- 多テナントの `default_scope { in_current_tenant }` はマイグレーション・seed・コンソールでは `Current.tenant` が nil で全件を返す → データ移行・補正はテナントを明示して回し、件数を先に報告してから実行する
+- テストランナーが無いプロジェクトでは「テストを書いて」を型チェック / ビルドと Playwright の操作手順に置き換える。受け入れ基準を画面で確かめる
+- 多テナントのスコープ（default_scope 等）はマイグレーション・seed・コンソールでは効かず全件を返す → データ移行・補正はテナントを明示して回し、件数を先に報告してから実行する
 - HTTP 200 や exit 0 は「中身が正しい」の根拠にならない → 保存系は再取得して値を見る。出力物は全行・全列を DB の実効値と突き合わせる
 
 ## コミュニケーション

@@ -4,12 +4,12 @@
 
 ```
 main            ← リリース済み。直接 push 禁止
-develop         ← 統合ブランチ（バックエンドにある。フロントは main が統合先）
+develop         ← 統合ブランチ（ある場合。統合先はリポジトリごとに `overview.md` で定義）
 <type>/<内容>   ← 作業ブランチ。必ずベースから切り、PR で戻す
 ```
 
-- どのブランチをベースにするかは `.claude/rules/project/` の各リポジトリの定義に従う。e-learning のフェーズ作業はフロント `docs/e-learning/PROGRESS.md` の先頭に書いたベースを使う
-- ブランチの prefix（`feat/` か `feature/` か）はリポジトリごとに既存の慣習に合わせる（`project/` に記載）。1 つのリポジトリに新しい流儀を持ち込まない
+- どのブランチをベースにするかは `.claude/rules/project/overview.md` の各リポジトリの定義に従う
+- ブランチの prefix（`feat/` か `feature/` か）はリポジトリごとに既存の慣習に合わせる（`overview.md` に記載）。1 つのリポジトリに新しい流儀を持ち込まない
 - 名前はケバブケースで内容が分かるもの（`fix/user-header-sticky`）。日付や個人名は入れない
 
 ## ルール

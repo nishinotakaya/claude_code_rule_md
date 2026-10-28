@@ -7,7 +7,7 @@
 | # | 規則 |
 |---|---|
 | 1 | 認証 `before_action` をパス前方一致条件で書かない。既定で全部にかけ、公開するものだけ `skip_before_action` で外す |
-| 2 | `protect_from_forgery` をコメントアウトのまま残さない（API モードは対象外。旧 ERB 側は残す） |
+| 2 | `protect_from_forgery` をコメントアウトのまま残さない（API モードは対象外。旧画面（ERB）側は残す） |
 | 3 | `skip_before_action :verify_authenticity_token` には署名検証を併設する |
 | 4 | CORS に `*` と部分一致正規表現を使わない |
 | 5 | production で `force_ssl` を false にしない |
@@ -25,7 +25,7 @@ before_action :authenticate!
 skip_before_action :authenticate!, only: [:login]   # 認証前なので
 ```
 
-テックプットの `Api::V1::BaseController` は `authenticate!` を既定でかけ、`auth/login` だけ skip する形。この形を崩さない。
+API の基底コントローラ（例: `Api::V1::BaseController`）は `authenticate!` を既定でかけ、ログインだけ skip する形にする。この形を崩さない。
 
 ## 2. Webhook の署名検証
 
@@ -53,7 +53,7 @@ origins /\Ahttps?:\/\/.*\.vercel\.app\z/
 # ❌
 origins '*'
 
-# ✅ 完全一致の許可リスト（テックプットの cors.rb の形）
+# ✅ 完全一致の許可リスト（cors.rb の形）
 origins ENV.fetch('FRONTEND_ORIGIN')
 credentials: false
 ```
@@ -62,9 +62,9 @@ credentials: false
 
 ## 4. トークンの保存先
 
-テックプットのフロントは `src/lib/api.ts` が `user_token` / `admin_token` / `manager_token` を localStorage に置いている。同一オリジンの任意 JS から読めるので XSS 1 件で抜ける。
+フロントがトークンを localStorage に置いている場合、同一オリジンの任意 JS から読めるので XSS 1 件で抜ける。
 
-- 新しいキーを増やさない。保存・取得は `tokenStorage` に閉じる
+- 新しいキーを増やさない。保存・取得はトークン保管層 1 箇所に閉じる
 - URL クエリ（`?token=`）に載せない。Referer・履歴・ログに残る
 - `dangerouslySetInnerHTML` / `innerHTML` を新設しない。Markdown は `rehype-sanitize` を通す
 - 移行先は httpOnly + Secure + SameSite Cookie。`api.ts` の TODO が正本

@@ -12,7 +12,6 @@ description: 調査結果・作業内容・設計をマークダウン文書に�
 - プロジェクト作業の記録 → そのリポジトリの `docs/` 配下（無ければ作成）。`docs/` はコミット対象外
 - レビュー結果 → `docs/reviews/PR<番号>-レビュー結果.md`
 - テスト証跡 → `docs/test_evidence/<機能名>/`
-- e-learning の上流文書・進捗 → `tech-put-app/docs/e-learning/`
 - ファイル名: `YYYY-MM-DD_<内容が分かる日本語>.md`
 
 ## 見出し構成テンプレ

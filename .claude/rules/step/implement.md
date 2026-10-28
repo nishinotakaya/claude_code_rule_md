@@ -13,7 +13,7 @@ implementer を **`isolation: "worktree"`** 付きで起動する。統合ブラ
 - UI 仕様（STEP 3 の出力。UI 変更がある場合）
 - テストコード（STEP 4.5 の出力。このテストを通す実装を書くこと。テストは変更しない）
 - 制約（壊してはいけないもの + STEP 1 で抜粋した規約）
-- テックプット固有の契約（.claude/rules/project/techput-overview.md の API 契約・テナント契約）
+- プロジェクト固有の契約（`.claude/rules/project/overview.md` の API 契約・テナント契約）
 - worktree 上でコミットすること（ステージはファイルパス明示）
 ```
 
@@ -28,8 +28,10 @@ implementer を **`isolation: "worktree"`** 付きで起動する。統合ブラ
 
 | リポジトリ | コマンド |
 |---|---|
-| バックエンド | `bundle exec rubocop` → `bundle exec rspec` → `bundle exec brakeman -q --no-pager` |
-| フロント | `npm run build` → Playwright（受け入れ基準） |
+| バックエンド（例: Rails） | `bundle exec rubocop` → `bundle exec rspec` → `bundle exec brakeman -q --no-pager` |
+| フロント（例: React） | `npm run build` → Playwright（受け入れ基準） |
+
+実コマンドは `overview.md` の検証コマンドを正とする。
 
 失敗した場合:
 1. エラー内容を全件分析する

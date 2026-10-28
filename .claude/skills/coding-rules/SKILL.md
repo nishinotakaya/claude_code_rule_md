@@ -34,9 +34,9 @@ description: コーディング規約の実例集と PR 前チェックリスト
 - [ ] 新規 CSS を書いていない（既存クラス・ユーティリティを再利用）
 - [ ] 共通部品（Layout・shared）の編集が機能差分のみ（ついで修正を含めていない）
 - [ ] 認可ガードがある（API: `authenticate_*!` + ロール + 所有 / テナントスコープ。画面: ルートガード + 表示制御の二重）
-- [ ] 取得・作成・更新が認証主体の relation か `Current.tenant` の default_scope 起点（`Model.unscoped` を理由なく書いていない）
+- [ ] 取得・作成・更新が認証主体の relation か（多テナントの場合）テナントの default_scope 起点（`Model.unscoped` を理由なく書いていない）
 - [ ] 更新は params に無いキーを触らない（`|| 初期値` で merge していない）
-- [ ] フロントの型とバックエンドの `*_json` が一致している
+- [ ] フロントの型とバックエンドのレスポンス整形が一致している
 - [ ] テストがある（特に認可・他テナントのテスト）
 - [ ] バックエンド: `bundle exec rubocop` / `rspec` / `brakeman` が通る。フロント: `npm run build` が通る
 - [ ] 秘密情報が差分に入っていない（`gitleaks git --staged --redact --exit-code 1` が 0 件）

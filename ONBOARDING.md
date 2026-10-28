@@ -1,43 +1,36 @@
-# インターン初日の手順（テックプット × Claude Code）
+# 初日の手順（Claude Code）
 
 ## 0. 用意するもの
 
-- Docker Desktop / Node.js（nvm 推奨）/ Git / GitHub アカウント（両リポジトリへの招待済み）
+- プロジェクトの実行環境（Docker / Node.js / Ruby など。`overview.md` を参照）/ Git / GitHub アカウント（対象リポジトリへの招待済み）
 - Claude Code（`npm install -g @anthropic-ai/claude-code`）
 - （任意）Codex CLI。`/dual-ai` で第二意見を取るときに使う
 
-## 1. リポジトリを並べて置く
+## 1. リポジトリを用意する
 
-```
-<作業ディレクトリ>/
-  tech-put-app/        ← フロント（React / Vite）
-  teac-output-new/     ← バックエンド（Rails API / Docker）
-```
-
-バックエンドの起動とポートは `teac-output-new/docker-compose.yml` を正とする。フロントの API 向き先は `tech-put-app/.env.development.local` の `VITE_API_URL`。
+作業するリポジトリを clone する。複数リポジトリ構成（フロント・バックエンドなど）の置き方と起動方法は、各リポジトリの `.claude/rules/project/overview.md` と README を正とする。
 
 ## 2. ルールを配備する
 
 ```bash
-git clone https://github.com/nishinotakaya/claude_code_rule_md.git /tmp/claude-rules
-/tmp/claude-rules/install.sh ./tech-put-app --apply
-/tmp/claude-rules/install.sh ./teac-output-new --apply
+git clone <このルール集の URL> /tmp/claude-rules
+/tmp/claude-rules/install.sh ./<対象リポジトリ> --apply
 ```
 
-配備後、各リポジトリで `claude` を起動して `/develop` が候補に出れば完了。
+配備後、対象リポジトリで `claude` を起動して `/develop` が候補に出れば完了。続けて `.claude/rules/project/overview.md` の `<...>` を実値で埋める。
 
 ## 3. 1 つのタスクの流れ
 
 1. Issue か指示を受けたら、**ベースブランチから作業ブランチを切る**（`.claude/rules/git/branch-strategy.md`）
 2. Claude Code に `/develop` と伝えて始める。要件が曖昧なら先に文章で確定する
-3. 実装が終わったら自分で確かめる。フロントは `npm run build` と画面操作、バックエンドは `bundle exec rspec` と `rubocop`
+3. 実装が終わったら自分で確かめる。`overview.md` の検証コマンドと画面操作で確かめる
 4. PR テンプレートを埋めて PR を出す。**動作確認の結果（コマンドと出力、スクショ）を書く**
 5. レビューの指摘には「直した / 直さない理由」を 1 件ずつ返す
 
 ## 4. やってはいけないこと（上位 5 つ）
 
 - ステージング全追加（`git add` にドットや `-A` を渡す）。コミット対象はファイル名で指定する
-- `main` / `develop` への直接 push、force push
+- 統合先ブランチへの直接 push、force push
 - DB を作り直す rake タスク（reset / drop / schema:load）。開発 DB が消える
 - `.env`・トークン・パスワードをコミット・チャット・PR に書く
 - AI が書いたコードを動かさずに「できました」と言う

@@ -25,7 +25,7 @@ main / develop（統合先。リポジトリごとに .claude/rules/project/ で
   └── <prefix>/yyy
 ```
 
-prefix はリポジトリの慣習に合わせる（フロント `feature/` `fix/`、バックエンド `feat/` `fix/`）。
+prefix はリポジトリの慣習に合わせる（`overview.md` に記載）。
 
 ## 各ロールの責務
 

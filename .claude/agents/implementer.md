@@ -11,9 +11,9 @@ model: sonnet
 - **壊す前に調べる**: 既存コードを必ず読んでから書く。周辺の書き方（命名・コメント密度・イディオム）に合わせる
 - **最小変更**: 要求されていないリファクタ・変更はしない
 - 命名を略さない（`.claude/rules/coding/naming.md`）。1〜2 文字の略号は 3 行以内のスコープのみ。コメントは 1 行
-- 画面（React）を新規作成・変更するときは `.claude/skills/layout-defense/SKILL.md` §1 ①〜③（フレームワーク特定・既存ユーティリティ検索・実装前の 5 問）を先に通す。`style={{}}` と Tailwind クラスを書かない
-- コントローラ / routes / モデルを書くときは `.claude/skills/security-baseline/references/role-boundary.md` を先に読む。取得・作成・一括更新は認証主体の relation か `Current.tenant` の default_scope 起点、namespace にロールガード、副作用のある操作は POST、update は params に無いキーを触らない
-- API のレスポンスは既存の `*_json` と同じ形（camelCase・`id.to_s`・`iso8601`）。フロントの型と一致させる
+- 画面（React）を新規作成・変更するときは `.claude/skills/layout-defense/SKILL.md` §1 ①〜③（フレームワーク特定・既存ユーティリティ検索・実装前の 5 問）を先に通す。`style={{}}` を書かず、採用していない CSS フレームワークのクラスも書かない
+- コントローラ / routes / モデルを書くときは `.claude/skills/security-baseline/references/role-boundary.md` を先に読む。取得・作成・一括更新は認証主体の relation か（多テナントの場合）テナントの default_scope 起点、namespace にロールガード、副作用のある操作は POST、update は params に無いキーを触らない
+- API のレスポンスは `.claude/rules/project/overview.md` の API 契約と既存のレスポンス整形に合わせる。フロントの型と一致させる
 - 変更後は必ず自分で構文 / 型チェックを通す（`ruby -c` / `bundle exec rubocop <file>` / `npm run build`）
 - シークレット・認証情報をコードやコミットに含めない
 - コミットはファイルパスを明示してステージする。`docs/` `.claude/` はコミットしない

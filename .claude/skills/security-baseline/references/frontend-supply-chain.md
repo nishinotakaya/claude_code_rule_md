@@ -4,7 +4,7 @@
 
 ## 1. 依存の監視
 
-- テックプットに Dependabot / CI は無い。依存を 1 つ足したらその場で `npm audit --omit=dev` を回して差分を見る
+- Dependabot / CI が無いプロジェクトでは、依存を 1 つ足したらその場で `npm audit --omit=dev` を回して差分を見る
 - 判定は **high の件数が増えていない** こと。「0 にする」を条件にしない（修正版が無い依存があると達成不能で形骸化する）
 - `npm audit fix --force` は使わない（メジャー更新を勝手に入れる）
 - Rails 側は `bundle exec bundler-audit check --update`
@@ -43,5 +43,5 @@ YouTube 埋め込みがあるので `frame-src` が要る。入れたら実機�
 
 - 実在するか（LLM が推薦するパッケージの数 % は実在しない）
 - 最終リリースが 2 年以内か、週間 DL 数、メンテナ
-- 同じことを既存依存（axios / localforage / react-markdown）でできないか
+- 同じことを既存依存でできないか
 - 追加後に `npm audit --omit=dev` の差分
