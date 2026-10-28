@@ -79,7 +79,7 @@ user-invocable: true
 ### 2.6 セキュリティ ★差分を読む 1 周を必ずこれに充てる → `references/security.md`
 - 外から来る値がシェル・ファイルパス・公開ディレクトリ・外部 HTTP・管理 UI・ログのどこに届くか
 - 認可境界（アクション × 認証 × ロール × 所有スコープ × 副作用）はコントローラ / routes を触る差分で必ず表にする
-- 多テナント: `unscoped` / `Model.find` の素呼び / `tenant_id` をパラメータから受ける / `Current.tenant` が nil の経路
+- 多テナント: `unscoped` / `Model.find` の素呼び / `tenant_id` をパラメータから受ける / テナントスコープが効かない経路
 
 ## 3. レビューコメントの書き方
 

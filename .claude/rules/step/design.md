@@ -11,8 +11,8 @@ UI/UX 設計を行ってください。
 <要件の要約>
 
 ## 既存デザインパターン
-- フロントは Bootstrap 5 + 自作 CSS（src/index.css のデザイントークン、src/styles/{components,pages}/*.css）
-- レイアウトは UserLayout / AdminLayout / ManagerLayout に載せる
+- CSS 方針・デザイントークンの場所: `.claude/rules/project/overview.md` とリポジトリの既存実装に従う
+- 既存の共通レイアウトに載せる
 - 同じ画面種（一覧・詳細・フォーム・モーダル）の既存実装: <パス>
 
 ## タスク

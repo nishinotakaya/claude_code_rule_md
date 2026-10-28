@@ -1,23 +1,23 @@
-# 機械が潰す観点と、このプロジェクトで人が見る観点
+# 機械が潰す観点と、人が見る観点
 
 > 差分を読む前にこれを読む。機械が確定判断できる観点はツールに任せ、AI の時間は機械に定義できない判断に使う。
-> ただし **テックプットには CI も lint（フロント）も無い**。下の表で「導入済み」でないものは、導入するまで人が見る。
+> ただし CI や lint が無いプロジェクトでは、下の表で「導入済み」でないものは、導入するまで人が見る（有無は `.claude/rules/project/overview.md`）。
 
 ## 1. 機械が確定判断できる観点
 
-| # | 観点 | ツール | テックプットでの状態 |
+| # | 観点 | ツール | このプロジェクトでの状態（埋める） |
 |---|---|---|---|
-| 1 | `any` / `as` キャスト | typescript-eslint | **未導入**。人が見る |
-| 2 | 空 catch `.catch(() => {})` | eslint / semgrep | **未導入**。人が見る |
-| 3 | 1〜2 文字変数・ブロック引数の略号 | ast-grep / rubocop | バックエンドは rubocop のみ。フロントは人が見る |
-| 4 | JSX インライン `style={{}}` | ast-grep | **未導入**。人が見る |
-| 5 | `save` / `update` の戻り値握りつぶし | semgrep | **未導入**。人が見る |
-| 6 | `useEffect` 依存配列漏れ | eslint `react-hooks/exhaustive-deps` | **未導入**。人が見る |
-| 7 | SQL インジェクション / プレースホルダ | brakeman | Gemfile にある。`bundle exec brakeman -q` を回す |
-| 8 | 未使用 export / 依存 | knip | 未導入 |
+| 1 | `any` / `as` キャスト | typescript-eslint | 導入していなければ人が見る |
+| 2 | 空 catch `.catch(() => {})` | eslint / semgrep | 導入していなければ人が見る |
+| 3 | 1〜2 文字変数・ブロック引数の略号 | ast-grep / rubocop | 導入していなければ人が見る |
+| 4 | JSX インライン `style={{}}` | ast-grep | 導入していなければ人が見る |
+| 5 | `save` / `update` の戻り値握りつぶし | semgrep | 導入していなければ人が見る |
+| 6 | `useEffect` 依存配列漏れ | eslint `react-hooks/exhaustive-deps` | 導入していなければ人が見る |
+| 7 | SQL インジェクション / プレースホルダ | brakeman | Rails なら `bundle exec brakeman -q` を回す |
+| 8 | 未使用 export / 依存 | knip | 導入していなければ人が見る |
 | 9 | 秘密情報の混入 | gitleaks | `gitleaks git --staged` を回す。既定ルールのリコールは約 5 割。`.env` の変数名だけの差分は手で見る |
 | 10 | 既知 CVE | bundler-audit / `npm audit --omit=dev` | 手動実行 |
-| 11 | N+1 | bullet（Gemfile にあり、test で raise） | rspec を回せば検出される。静的には取れない |
+| 11 | N+1 | bullet（test で raise させる設定にしている場合） | rspec を回せば検出される。静的には取れない |
 
 > brakeman が緑でも安全の証明にならない。秘密の混入・認可の欠落・テナント境界・平文保存は検出しない。
 
@@ -30,7 +30,7 @@
 5. **命名が実体とズレていないか** — `fetchUser` が User 以外を返す
 6. **重複を共通化すべきか、将来別々に育つから残すべきか**
 7. **テナント境界・認可の到達可能性** — `unscoped`、`tenant_id` をパラメータから受ける、ロール違いの直打ち
-8. **API 契約の一致** — フロントの型とバックエンドの `*_json`
+8. **API 契約の一致** — フロントの型とバックエンドのレスポンス整形
 
 ## 3. 推奨する導入（任意。入れたらこの表を更新する）
 

@@ -2,7 +2,7 @@
  * 使い方:
  * - このファイルを、対象プロジェクトの e2e ディレクトリ（`@playwright/test` 導入済み）に
  *   `layout_overflow_check.spec.ts` としてコピーして実行する。
- *   例: LAYOUT_BASE_URL=http://localhost:5173 LAYOUT_PATHS=/,/dashboard npx playwright test layout_overflow_check.spec.ts
+ *   例: LAYOUT_BASE_URL=<フロントの起動 URL> LAYOUT_PATHS=/,/dashboard npx playwright test layout_overflow_check.spec.ts
  * - `toHaveScreenshot` によるスナップショット比較（`LAYOUT_SNAPSHOT=1`）を使う場合、
  *   初回実行時はベースライン画像が無いため `npx playwright test --update-snapshots` を実行して基準画像を作成する。
  * - html/body に `overflow-x: hidden` があると横溢れの隠蔽（禁止する応急処置）として fail する。
@@ -10,7 +10,7 @@
  */
 import { test, expect } from '@playwright/test'
 
-const DEFAULT_BASE_URL = 'http://localhost:5173'
+const DEFAULT_BASE_URL = 'http://localhost:3000'
 const DEFAULT_PATHS = '/'
 const DEFAULT_VIEWPORT_WIDTHS = '320,375,768,1024,1440'
 const DEFAULT_TOLERANCE_PX = 1

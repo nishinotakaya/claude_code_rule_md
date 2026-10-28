@@ -1,6 +1,6 @@
 # 認可（誰がどのレコードを触れるか）
 
-> 前提: テックプットに認可フレームワーク（Pundit / CanCanCan）は無い。認可は手書き。入れる / 入れないの議論はしない。抜けを機械的に見つけて型を揃える。
+> 前提: 認可フレームワーク（Pundit / CanCanCan）が無いプロジェクトでは認可は手書き。入れる / 入れないの議論はしない。抜けを機械的に見つけて型を揃える。
 
 ## 1. 未スコープ find の棚卸し
 
@@ -18,16 +18,16 @@ grep -rn 'unscoped' app/ --include='*.rb'
 
 **grep の結果を母集合として扱わない。** `@article_id = params[:id]` と変数に入れてから `find` する形はこのコマンドに出ない。出た行は §2 に進め、出なかった行は §2 の兄弟列挙で拾う。
 
-テックプットでは `default_scope { in_current_tenant }` を持つモデルは `Article.find` でもテナント境界は効く。ただし **所有者境界（受講生 A が受講生 B の学習記録を触れないか）は別** なので、受講生向けの更新系は `current_user.xxx.find` にする。
+多テナントでテナントの default_scope を持つモデルは `Model.find` でもテナント境界は効く。ただし **所有者境界（ユーザー A がユーザー B の記録を触れないか）は別** なので、一般ユーザー向けの更新系は `current_user.xxx.find` にする。
 
 ## 2. 兄弟アクション同値性チェック
 
 未スコープ find を 1 件見つけたら、そのモデルを解決している全箇所を列挙して防御レベルが揃っているかを見る。
 
-1. 対象モデル名を決める（例 `Learning`）
+1. 対象モデル名を決める（例 `Record`）
 2. 解決箇所を全部出す
    ```bash
-   grep -rnE 'Learning\.(find|find_by|where|new|create|unscoped)' app/controllers --include='*.rb'
+   grep -rnE 'Record\.(find|find_by|where|new|create|unscoped)' app/controllers --include='*.rb'
    ```
 3. 各行をスコープ済み / 未スコープに振り分ける
 4. `before_action :set_xxx` の中身も見る（本体に find が無くてもそこでスコープしている）
@@ -41,7 +41,7 @@ grep -rn 'unscoped' app/ --include='*.rb'
 | 単一レコードの所有者判定 | find の直後。1 行の述語メソッド（`can_edit_article?(article)`）に切り出す |
 | 兄弟アクションで使い回す | private 述語 1 本に寄せる。述語があるのにインラインで書き直したら drift の始まり |
 | コントローラ共通のスコープ | `before_action` でスコープ済み ivar を作る |
-| 全体のロール判定 | `Api::V1::BaseController` の `authenticate_admin!` / `authenticate_manager!` |
+| 全体のロール判定 | API の基底コントローラ（例: `Api::V1::BaseController`）の `authenticate_admin!` / `authenticate_manager!` |
 | 一覧と単体で同じ条件 | スコープを 1 本作って両方から呼ぶ。**一覧だけ絞って単体が素、が最頻出の抜け** |
 
 **命名**: 「誰が何をできるか」が読める形（`can_submit?` / `can_edit_article?`）。`check` / `chk` / `auth?` は禁止。`authenticate_*` と `can_*?` を混ぜない。

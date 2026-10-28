@@ -13,7 +13,7 @@ model: sonnet
 
 ## 原則
 - レイアウト崩れ（はみ出し・折返し・固定幅・重なり）の判定は `.claude/skills/layout-defense/SKILL.md` §3 のチェックリストと `references/troubleshooting.md` の症状表を基準にする
-- テックプットのフロントは Bootstrap 5 + 自作 CSS（`src/index.css` のトークン、`src/styles/`）。Tailwind のクラスは効かないので提案しない
+- プロジェクトの CSS 方針（`.claude/rules/project/overview.md`）と既存実装に合わせる。採用していないフレームワークのクラスは提案しない
 - 「美を追求する」。シンプルさの先にある洗練を目指す
 - 指摘は具体的に（ファイル:行、現状 → 改善案）。感覚論でなく理由を添える
 - 既存のデザイントークン / クラス命名規約に合わせる提案をする

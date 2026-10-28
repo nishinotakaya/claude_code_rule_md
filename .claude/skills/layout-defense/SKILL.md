@@ -1,6 +1,6 @@
 ---
 name: layout-defense
-description: レイアウト崩れの防止と修正（Defensive CSS・Bootstrap 5 の症状→原因→修正表、Playwright 横溢れ検査）。「はみ出る」「崩れる」「スマホで崩れる」「揃わない」「横スクロールが出る」、画面の新規作成・変更前、デザインレビュー時に参照。
+description: レイアウト崩れの防止と修正（Defensive CSS・Bootstrap 3/4・Tailwind v4 の症状→原因→修正表、Playwright 横溢れ検査）。「はみ出る」「崩れる」「スマホで崩れる」「揃わない」「横スクロールが出る」、画面の新規作成・変更前、デザインレビュー時に参照。
 ---
 
 # layout-defense — レイアウト崩れの防止と修正
@@ -19,16 +19,16 @@ description: レイアウト崩れの防止と修正（Defensive CSS・Bootstrap
 ### ① フレームワークとバージョンを特定する（推測で書かない）
 
 ```bash
-grep -o '"bootstrap": *"[^"]*"' package.json       # フロントは Bootstrap 5（main.tsx で import）
-grep -o '"tailwindcss": *"[^"]*"' package.json     # 入っているが @tailwind ディレクティブが無く、ユーティリティは生成されない
+grep -o '"bootstrap": *"[^"]*"' package.json       # 版を確認する
+grep -o '"tailwindcss": *"[^"]*"' package.json     # 依存にあっても有効とは限らない
 grep -rn "@tailwind" src/ index.html               # 0 件なら Tailwind クラスを書いても効かない
 ```
 
-テックプットのフロントは **Bootstrap 5 + 自作 CSS**（`src/index.css` のデザイントークン、`src/styles/{components,pages}/*.css`）。Tailwind のクラスを新規に書かない。バックエンドの旧 ERB 側は Bootstrap 4 系なので版を確認してから。
+プロジェクトの CSS 方針は `.claude/rules/project/overview.md` と既存実装に従う。採用していないフレームワークのクラスを新規に書かない。同一プロジェクトに別系統の画面（旧画面など）があれば版を確認してから。
 
 ### ② 既存のユーティリティ・共通コンポーネントを探す
 
-新しい CSS を書く前に、同じ画面種（一覧・詳細・フォーム・モーダル）の既存実装と `src/styles/` の自作クラスを grep する。「新規 CSS は最小限」「`style={{}}` を書かない」を守る。
+新しい CSS を書く前に、同じ画面種（一覧・詳細・フォーム・モーダル）の既存実装と自作 CSS のクラスを grep する。「新規 CSS は最小限」「`style={{}}` を書かない」を守る。
 
 ### ③ 最小変更で組む — 実装前の 5 問
 
@@ -47,14 +47,14 @@ grep -rn "@tailwind" src/ index.html               # 0 件なら Tailwind クラ
 | ボタン群が狭幅で横に溢れる | `.flex-wrap` 未指定 |
 | スマホで固定幅が溢れる | `width: 300px` → `max-width: 100%` |
 | 重なる・隠れる | stacking context と DOM 順 → 後に描画 + `z-index` 明示 |
-| クラスを付けたのに効かない | Tailwind クラスを書いている（生成されない）/ Bootstrap の版違い |
+| クラスを付けたのに効かない | 採用していないフレームワークのクラスを書いている（生成されない）/ Bootstrap の版違い |
 
 ### ④ 複数幅 × 壊れる入力で検証する
 
-`scripts/overflow_check.spec.ts` を `@playwright/test` のあるディレクトリにコピーして実行する（フロントの依存には無いので、別ディレクトリに `npm i -D @playwright/test` して回す）。
+`scripts/overflow_check.spec.ts` を `@playwright/test` のあるディレクトリにコピーして実行する（対象の依存に無ければ、別ディレクトリに `npm i -D @playwright/test` して回す）。
 
 ```bash
-LAYOUT_BASE_URL=http://localhost:5173 LAYOUT_PATHS=/,/dashboard,/admin/articles npx playwright test overflow_check.spec.ts
+LAYOUT_BASE_URL=<フロントの起動 URL> LAYOUT_PATHS=/,/dashboard npx playwright test overflow_check.spec.ts
 # 既定 viewport: 320,375,768,1024,1440 / ログイン済みで回すなら LAYOUT_STORAGE_STATE=auth.json
 ```
 

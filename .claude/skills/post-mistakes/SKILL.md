@@ -24,7 +24,7 @@ description: AI が過去にやらかしたミスの型と再発防止チェッ�
 
 ### 3. アプリ・環境の取り違え
 - 何: 別アプリを本番扱いして環境変数を投入した
-- 教訓: 本番 URL は設定ファイルから逆引きする。ドキュメントのアプリ名・ポートは古い前提で疑い、`docker-compose.yml` / `heroku.yml` / `vercel.json` の現物で裏取りする（テックプットの `CLAUDE.md` に書かれたポート 3001 と `docker-compose.yml` の 3013 が食い違っていた実例）
+- 教訓: 本番 URL は設定ファイルから逆引きする。ドキュメントのアプリ名・ポートは古い前提で疑い、`docker-compose.yml` / `heroku.yml` / `vercel.json` の現物で裏取りする（`CLAUDE.md` に書かれたポートと `docker-compose.yml` の実値が食い違っていた実例）
 
 ### 4. 手作りの decode で本文を全部壊した
 - 何: JSON エスケープの decode を自前の正規表現でやって取りこぼし、7 件の本文を文字化けさせて書き戻した
@@ -67,7 +67,7 @@ description: AI が過去にやらかしたミスの型と再発防止チェッ�
 ### mass-update / バックフィルを書いたら
 - [ ] 最初の 1 件だけ流して fetch → write → re-fetch → diff で確認した
 - [ ] decode は標準ライブラリに任せ、自前 regex で unescape していない
-- [ ] テナントを明示して回した（`Current.tenant` が nil だと全テナントに書く）
+- [ ] テナントを明示して回した（スコープが効かない経路では全テナントに書く）
 
 ## 自己更新ルール
 

@@ -5,9 +5,9 @@
 ## 始める前
 
 1. 対象ブランチを最新化し、`git log --oneline base..HEAD` で流れを掴む
-2. 型・ビルド・テストを自分で回す（`npm run build` / `bundle exec rspec` / `rubocop`）。緑かどうかを最初に押さえる
+2. 型・ビルド・テストを自分で回す（`overview.md` の検証コマンド）。緑かどうかを最初に押さえる
 3. 未コミットの diff が混ざっていないか確認する
-4. このプロジェクトには lint も CI も無い（バックエンドは rubocop のみ）。機械が潰す前提の観点（`any`・空 catch・1 文字変数・N+1）も人が見る
+4. lint / CI が無い項目は人が見る（`any`・空 catch・1 文字変数・N+1 など。有無は `overview.md` と `skills/code-review/references/machine-checked.md`）
 
 ## 指摘のラベル（md 報告と総評で使う。行コメントには貼らない）
 

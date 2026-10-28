@@ -12,7 +12,7 @@
 - 環境変数の追加があれば `.env.example` に変数名だけ足し、デプロイ先にも設定したことを確認する
 - `gitleaks git --staged --no-banner --redact --exit-code 1` が 0 件（値は出力しない）
 - マイグレーションは `db:migrate` → `db:rollback` → `db:migrate` で戻せることをローカルで確認してから
-- デプロイの実手順は各リポジトリの README / `.claude/rules/project/` に従う（バックエンドは `heroku.yml` がある）
+- デプロイの実手順は各リポジトリの README / `.claude/rules/project/overview.md` に従う
 - デプロイ後: ビルドログにエラーが無いこと、ヘルスチェック（トップ画面・ログイン API）が応答すること。失敗したらロールバックして報告する
 - **本番データを書き換える検証（同期・取込・リセット）は実行前に一言断る**
 
