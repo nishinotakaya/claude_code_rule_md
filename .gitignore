@@ -1,0 +1,5 @@
+# このリポジトリでは .claude/ と CLAUDE.md が成果物。グローバル ignore（~/.config/git/ignore）の除外を打ち消す
+!.claude/
+!.claude/**
+!CLAUDE.md
+.DS_Store
