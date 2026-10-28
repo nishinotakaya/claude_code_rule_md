@@ -20,7 +20,7 @@
 | 2 | `.claude/rules/<分類>/<topic>.md` | 常時。`paths:` 付きは該当ファイルを触ったときだけ | 短い規則。1 ファイル 1 テーマ |
 | 3 | `.claude/skills/<name>/SKILL.md` + `references/` | `/<name>` で呼んだとき・関連作業のとき | 長い手順・チェックリスト・実例 |
 
-常時読込の総量を抑えるため、技術固有の規則（React / Rails / RSpec / マイグレーション）は `paths:` で範囲を限定し、長い手順は skills に置く。
+常時読込の総量を抑えるため、技術固有の規則（React / Rails / RSpec / マイグレーション）は `paths:` で範囲を限定し、長い手順は skills に置く。`rules/step/` は常時読込（約 20KB）。
 
 ```
 CLAUDE.md
@@ -33,13 +33,14 @@ install.sh                            ← 対象リポへの配備（既定 dry-
   rules/
     core/      mindset / task-management / token-saving
     git/       branch-strategy / commit-rules / pull-request
-    coding/    naming / comments / readable-code / refactoring (+ 技術固有は各ブランチ)
-    security/  baseline (+ frontend.md / rails-authz.md は各ブランチ)
+    coding/    naming / comments / readable-code / refactoring / react-typescript / css-layout / rails-api / rspec / migration
+    security/  baseline / frontend / rails-authz
     review/    code-review
     testing/   e2e-playwright
-    project/   techput-overview (+ frontend.md / backend.md は各ブランチ)
+    project/   techput-overview / frontend / backend
+    step/      workflow-overview / plan / design / test / implement / review / deploy-qa / retro（/develop の各ステップ詳細）
   skills/
-    develop/           10 ステップ開発フロー（/develop）
+    develop/           10 ステップ開発フロー（/develop。詳細は rules/step/）
     code-review/       レビュー観点・トーン・報告形式・GitHub 投稿
     coding-rules/      命名・コメントの実例
     security-baseline/ 認可・認証境界・ロール境界・テナント境界
@@ -71,7 +72,7 @@ git clone https://github.com/nishinotakaya/claude_code_rule_md.git /tmp/claude-r
 ## 旧構成からの変更
 
 - `CLAUDE.md` を `.claude/commands/` からリポジトリ直下へ（commands 配下では自動読込されない）
-- `.claude/rules/` を分類別サブフォルダに再編。develop の step ファイルは `.claude/skills/develop/references/` へ移動（常時読込から外す）
+- `.claude/rules/` を分類別サブフォルダに再編（core / git / coding / security / review / testing / project / step）。旧 `step-*.md` と `workflow-overview.md` は `rules/step/` へ
 - `.claude/commands/develop.md` を `.claude/skills/develop/SKILL.md` に統合（slash コマンドは skills に統合済み）
 - `.claude/memory/` を削除（他案件固有のメモだった。教訓は `tasks/lessons.md` に一本化）
 - `.claude/skills/auto-test.md` を `auto-test/SKILL.md` 形式に修正

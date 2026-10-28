@@ -12,18 +12,18 @@ user-invocable: true
 - **要件が未確定の新機能**（業務フロー・権限境界・データ契約・外部連携を新設する）は STEP 1 の前に要件・仕様・設計を文章で確定し、社長の承認を取る。e-learning は `/elearning-pm` が上流文書とフェーズを持っている
 - 局所的なバグ修正・互換的な小改修はこのフローの STEP 1〜2 を短く済ませ、STEP 5〜7 を省かない
 
-## 参照ファイル（必要なステップだけ読む）
+## ステップ別の詳細（`.claude/rules/step/`。常時読込済み）
 
-| ファイル | いつ読むか |
+| ファイル | 内容 |
 |---|---|
-| `references/workflow-overview.md` | 6 ロールの責務・ブランチ構造・デザイナー起動判断を確認するとき |
-| `references/step-plan.md` | STEP 1〜2（要件理解・影響範囲） |
-| `references/step-design.md` | STEP 3 で UI がある場合 |
-| `references/step-test.md` | STEP 4.5（テスト先行） |
-| `references/step-implement.md` | STEP 5（worktree 隔離の実装） |
-| `references/step-review.md` | STEP 6〜7（レビュー・修正） |
-| `references/step-deploy-qa.md` | STEP 8〜10（マージ・デプロイ・QA） |
-| `references/step-retro.md` | STEP 10（振り返り） |
+| `.claude/rules/step/workflow-overview.md` | 6 ロールの責務・ブランチ構造・デザイナー起動判断・委任状の型 |
+| `.claude/rules/step/plan.md` | STEP 1〜2（要件理解・影響範囲） |
+| `.claude/rules/step/design.md` | STEP 3 で UI がある場合 |
+| `.claude/rules/step/test.md` | STEP 4.5（テスト先行） |
+| `.claude/rules/step/implement.md` | STEP 5（worktree 隔離の実装） |
+| `.claude/rules/step/review.md` | STEP 6〜7（レビュー・修正） |
+| `.claude/rules/step/deploy-qa.md` | STEP 8〜10（マージ・デプロイ・QA） |
+| `.claude/rules/step/retro.md` | STEP 10（振り返り） |
 
 ## 10 ステップ
 
