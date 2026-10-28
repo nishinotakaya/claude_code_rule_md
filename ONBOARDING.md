@@ -19,10 +19,9 @@
 ## 2. ルールを配備する
 
 ```bash
-git clone -b feat/techput-frontend https://github.com/nishinotakaya/claude_code_rule_md.git /tmp/rules-frontend
-/tmp/rules-frontend/install.sh ./tech-put-app --apply
-git clone -b feat/techput-backend  https://github.com/nishinotakaya/claude_code_rule_md.git /tmp/rules-backend
-/tmp/rules-backend/install.sh ./teac-output-new --apply
+git clone https://github.com/nishinotakaya/claude_code_rule_md.git /tmp/claude-rules
+/tmp/claude-rules/install.sh ./tech-put-app --apply
+/tmp/claude-rules/install.sh ./teac-output-new --apply
 ```
 
 配備後、各リポジトリで `claude` を起動して `/develop` が候補に出れば完了。

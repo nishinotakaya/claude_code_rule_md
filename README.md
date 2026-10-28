@@ -3,17 +3,14 @@
 テックプット（フロント `tech-put-app` / バックエンド `teac-output-new`）で Claude Code を使って開発するためのルール一式。
 対象リポジトリの直下にコピーして使う（両リポジトリとも `.claude/` と `CLAUDE.md` を `.gitignore` しているため）。
 
-## ブランチ
+## 対象
 
-| ブランチ | 中身 | 配備先 |
-|---|---|---|
-| `main` | 汎用版（旧構成のまま） | — |
-| `feat/techput-common` | 両リポ共通のルール・スキル・エージェント | 直接は使わない |
-| `feat/techput-frontend` | common + React/TypeScript 固有 | `tech-put-app/` |
-| `feat/techput-backend` | common + Rails API 固有 | `teac-output-new/` |
+| 配備先 | 役割 |
+|---|---|
+| `tech-put-app/` | フロント（React / Vite / TypeScript） |
+| `teac-output-new/` | バックエンド（Rails API / Docker） |
 
-共通部分を直すときは **`feat/techput-common` で直してから、frontend / backend の両方へ `git merge feat/techput-common`** する。
-frontend / backend で直接 common のファイルを触ると、もう片方に反映されず食い違う。
+フロント・バックで分けず、**同じ一式を両方に配備する**。技術固有の規則（React / Rails / RSpec / マイグレーション）は `paths:` 付きで、該当ファイルを触ったときだけ読み込まれるため、混ざっていても常時読込は増えない。
 
 ## 3 層構成（読み込まれ方が違う）
 
@@ -61,16 +58,17 @@ tasks/
 ## 配備
 
 ```bash
-git clone -b feat/techput-frontend https://github.com/nishinotakaya/claude_code_rule_md.git /tmp/rules-frontend
-/tmp/rules-frontend/install.sh /path/to/tech-put-app            # 差分表示のみ
-/tmp/rules-frontend/install.sh /path/to/tech-put-app --apply    # 配備
+git clone https://github.com/nishinotakaya/claude_code_rule_md.git /tmp/claude-rules
+/tmp/claude-rules/install.sh /path/to/tech-put-app               # 差分表示のみ
+/tmp/claude-rules/install.sh /path/to/tech-put-app --apply       # 配備
+/tmp/claude-rules/install.sh /path/to/teac-output-new --apply
 ```
 
 - `install.sh` は上書きと追加だけを行い、**削除はしない**。`tasks/` と `.github/pull_request_template.md` は対象に無いときだけ置く
 - 配備後、対象リポで `claude` を起動し `/develop` が出ることを確認する
 - 長期的には対象リポの `.gitignore` から `.claude/` と `CLAUDE.md` を外してコミット管理に移す方が drift しない（要レビュアー合意）
 
-## 旧構成（main）からの変更
+## 旧構成からの変更
 
 - `CLAUDE.md` を `.claude/commands/` からリポジトリ直下へ（commands 配下では自動読込されない）
 - `.claude/rules/` を分類別サブフォルダに再編。develop の step ファイルは `.claude/skills/develop/references/` へ移動（常時読込から外す）
